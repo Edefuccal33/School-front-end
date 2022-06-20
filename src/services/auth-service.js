@@ -16,6 +16,7 @@ class AuthService {
                 }
                 return response.data;
             });
+            
     }
 
     logout(){
@@ -35,7 +36,7 @@ class AuthService {
     }
 
     isLogged() {
-        return localStorage.getItem("user");
+        return localStorage.getItem("user") ? true : false;
     }
 }
 

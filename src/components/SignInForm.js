@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import { Button } from "@chakra-ui/button";
 import { Heading, VStack } from "@chakra-ui/layout";
 import { Formik } from "formik";
@@ -12,6 +12,7 @@ function SignInForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const handlePasswordVisibility = () => setShowPassword(!showPassword);
+
   const toast = useToast()
   const nav = useNavigate();
 
@@ -50,7 +51,7 @@ function SignInForm() {
           })
       }
     );
-}
+  }
 
   return (
     <VStack w="100%" h="100%">
@@ -71,7 +72,7 @@ function SignInForm() {
           >
             <Heading pb={4}>Sign In</Heading>
 
-            <TextField name="email" placeholder="Enter email" type="email" />
+            <TextField name="email" placeholder="Enter email" type="email" autoFocus/>
 
             <InputGroup>
               <TextField
@@ -87,7 +88,7 @@ function SignInForm() {
               </InputRightElement>
             </InputGroup>
 
-            <Button type="submit" variant="outline" colorScheme="teal">
+            <Button type="submit" variant="outline" colorScheme="teal" disabled={!formik.isValid}>
               Enter
             </Button>
           </VStack>

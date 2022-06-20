@@ -80,7 +80,8 @@ function SignUpForm() {
                 name="email" 
                 placeholder="Enter email" 
                 type="email" 
-                value={formik.values.email} 
+                value={formik.values.email}
+                autoFocus 
             />
 
             <InputGroup>
@@ -91,7 +92,7 @@ function SignUpForm() {
                 value={formik.values.password}
               />
 
-              <InputRightElement w="3rem" h='3rem'>
+              <InputRightElement w="3rem" h='3rem' alignSelf="center">
                 <Button h="1.5rem" size="sm" onClick={handlePasswordVisibility}>
                   {showPassword ? <Icon name="view-off" /> : <Icon name="view" />}
                 </Button>

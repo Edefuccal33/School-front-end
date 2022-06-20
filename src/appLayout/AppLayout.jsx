@@ -6,14 +6,16 @@ import AppFooter from "./AppFooter";
 import { Flex, Box} from "@chakra-ui/react";
 
 function AppLayout() {
+
+
   return (
     <React.Fragment>
         <Box w="100%">
-            <AppHeader w="100%" h="100px"/>
-            <Flex w="100%">
-                <AppBody/>
-            </Flex>
-            <AppFooter/>
+          <AppHeader w="100%" h="100px"/>
+          <Flex w="100%">
+            <AppBody/>
+          </Flex>
+          <AppFooter/>
         </Box>
     </React.Fragment>
   )

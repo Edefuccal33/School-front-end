@@ -1,11 +1,10 @@
 import React from 'react'
 import { HStack, IconButton,Text, VStack } from "@chakra-ui/react";
 import { FaFacebookF, FaTwitter, FaTelegramPlane, FaLinkedinIn} from 'react-icons/fa';
-import authService from '../services/auth-service';
 
 const AppFooter = () => {
+
   let year = new Date().getFullYear();
-  const user = authService.getCurrentUser();
 
   return (
     <React.Fragment>
@@ -17,7 +16,7 @@ const AppFooter = () => {
                 <IconButton icon={<FaLinkedinIn/>} isRound size="sm" colorScheme='linkedin'/>
             </HStack>
             <HStack w="100%" justify="center" pb={2}>
-                <Text>{year} - All rights reserved {user ? "- USER: " + user.email : ""}</Text>
+                <Text>{year} - All rights reserved </Text>
             </HStack>
         </VStack>
     </React.Fragment>

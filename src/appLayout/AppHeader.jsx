@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IconButton, Button, Spacer, useColorMode, VStack, HStack, Box, Image } from "@chakra-ui/react";
 import { FaSun, FaMoon, FaSignInAlt, FaPen, FaSignOutAlt} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,6 +10,28 @@ const AppHeader = () => {
   const [InDisabled, setInDisabled] = useState(false);
   const [UpDisabled, setUpDisabled] = useState(false);
   const nav = useNavigate();
+
+  // const { auth, setAuth } = useContext(AuthContext);
+
+  // const logout = function () {
+  //   AuthService.clearLocalStorage();
+  //   setAuth(false);
+  // };
+
+  // console.log(auth)
+
+  // const [user, setUser] = useState({});
+
+  // useEffect(() => {
+  //   setUser(authService.getCurrentUser());
+  // }, [])
+
+  // const logOut = async () =>{ 
+  //   await authService.logout();
+  //   // setAuth(false);
+  //   // console.log(auth)
+  //   nav("/signin");
+  // };
 
   const handleInDisabled = () => {
     setInDisabled(!InDisabled);
@@ -47,20 +69,41 @@ const AppHeader = () => {
               />
             </Link>
           </Box>
-          <Spacer/>
+          {/* <Spacer/> */}
 
-          {isLogged ?
-            <Box w="400px" h="100%" pt={7} pr={4} align="end">
+          {isLogged ? 
+            <HStack w="150px" h="100%" pt={4} align="center">
               <Link to="/home">
-                  <Button color="pink.500" variant='ghost' leftIcon={<FaSignOutAlt/>} onClick={logOut}>
-                      Log out
-                  </Button>
+                <Button color="pink.500" variant='ghost' leftIcon={<FaSignOutAlt/>}>
+                    Home
+                </Button>
               </Link>
-            </Box>
+              <Link to="/students">
+                <Button color="pink.500" variant='ghost' leftIcon={<FaSignOutAlt/>}>
+                    Students
+                </Button>
+              </Link>
+              <Link to="/teachers">
+                <Button color="pink.500" variant='ghost' leftIcon={<FaSignOutAlt/>}>
+                    Teachers
+                </Button>
+              </Link>
+            </HStack>
             :
-            <Box w="400px" h="100%" pt={7} pr={4} align="end">
+            ""
+          }
+
+          <Box w="100%" h="100%" pt={7} pr={4} align="end">
+          {isLogged ?
+            <Link to="/home">
+              <Button color="pink.500" variant='ghost' leftIcon={<FaSignOutAlt/>} onClick={logOut}>
+                  Log out
+              </Button>
+            </Link>
+          :
+            <div>
               <Link to="/signin">
-                <Button color="pink.500" variant='ghost' leftIcon={<FaSignInAlt/>} disabled={InDisabled} onClick={handleInDisabled}>
+                <Button color="pink.500" variant='ghost' leftIcon={<FaSignInAlt/>} disabled={InDisabled}  onClick={handleInDisabled}>
                     Sign in
                 </Button>
               </Link>
@@ -70,9 +113,15 @@ const AppHeader = () => {
                     Sign up
                 </Button>
               </Link>
-            </Box>
-          } 
-            <IconButton ml={10} icon={colorMode === 'light' ? <FaMoon/> : <FaSun/>} isRound size="md" onClick={toggleColorMode}/>
+            </div>
+          }
+          </Box>
+
+          <Box w="5%" h="100%" pt={7} pr={4} align="center">
+          <IconButton  icon={colorMode === 'light' ? <FaMoon/> : <FaSun/>} isRound size="md" onClick={toggleColorMode}/>
+          </Box>
+          
+
         </HStack>
       </VStack>
     </React.Fragment>

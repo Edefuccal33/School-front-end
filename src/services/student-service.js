@@ -10,6 +10,17 @@ class StudentService {
             headers: authHeader()
         });
     }
+
+    createStudent(name, email, birthDate, phoneNumber){
+        return axios.post(API_URL + "students", {
+            name,
+            email,
+            birthDate,
+            phoneNumber,
+        }, {
+            headers: authHeader()
+        });
+    }
 }
 
 export default new StudentService();
