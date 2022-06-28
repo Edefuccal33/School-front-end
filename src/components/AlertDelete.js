@@ -7,17 +7,49 @@ import {
     AlertDialogOverlay,
     Button,
     useDisclosure,
+    useToast,
+    Icon,
   } from '@chakra-ui/react'
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import studentService from '../services/student-service';
+import { DeleteIcon } from '@chakra-ui/icons'
 
-function AlertDelete() {
+function AlertDelete(props) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef()
+    const toast = useToast()
+    const nav = useNavigate();
+
+    const onDelete = async () => {
+      await studentService.deleteStudent(props.objectId)
+        .then(() => {
+          toast({
+            title: `Delete confirmation`,
+            description: 'Student is now deleted',
+            status: 'success',
+            duration: 1200,
+            isClosable: true,
+          })
+          console.log("si desaparezco se actualizó la página.")
+          onClose();
+          props.refreshHandler(true);
+        },
+        () => {
+            toast({
+              title: 'Ups! Seems like something went wrong!',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            })
+        }
+      );
+    }
   
     return (
       <>
         <Button colorScheme="red" onClick={onOpen} size='sm'>
-          Delete
+          <DeleteIcon/>
         </Button>
   
         <AlertDialog
@@ -39,7 +71,7 @@ function AlertDelete() {
                 <Button ref={cancelRef} onClick={onClose}>
                   Cancel
                 </Button>
-                <Button colorScheme='red' onClick={onClose} ml={3}>
+                <Button colorScheme='red' onClick={onDelete} ml={3}>
                   Delete
                 </Button>
               </AlertDialogFooter>

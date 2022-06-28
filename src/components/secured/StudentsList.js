@@ -1,20 +1,32 @@
-import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption} from '@chakra-ui/react'
+import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Tfoot, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption, IconButton} from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import studentService from '../../services/student-service';
 import SubmitModal from './../SubmitModal';
 import AlertDelete from '../AlertDelete';
-
+import {
+  Pagination,
+  usePagination,
+  PaginationNext,
+  PaginationPage,
+  PaginationPrevious,
+  PaginationContainer,
+  PaginationPageGroup,
+} from "@ajna/pagination";
+import { EditIcon, SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons'
 
 function StudentsList() {
 
     const [students, setStudents] = useState([]);
 
+    const [refreshServer, setRefreshServer] = useState(false);
+
     useEffect(() => {
       studentService.getAll()
         .then((response) => setStudents(response.data))
         .catch(() => setStudents([]))
-    }, [students]);
-  
+        return ()=> setRefreshServer(false);
+    }, [refreshServer]);
+
     const rows = students.map((s, i) => (
         <Tr key={i}>
           <Td>{s.name}</Td>
@@ -22,14 +34,19 @@ function StudentsList() {
           <Td>{s.email}</Td>
           <Td isNumeric>{s.phoneNumber}</Td>
           <Td>
-            <Badge variant='solid' colorScheme='pink'>
-              {s.subjects == "" ? "" : s.subjects[i].name}
-            </Badge>
+            {s.subjects == "" ? "Add" :
+              <Badge variant='solid' colorScheme='pink'>
+                {s.subjects[i].name} 
+                <IconButton ml={1} variant="ghost" size={2} icon={<SmallCloseIcon/>} />
+              </Badge>
+            }
+            <IconButton ml={1} variant='outline' colorScheme='teal' size={2} icon={<SmallAddIcon/>} />
           </Td>
           <Td>
             <ButtonGroup>
-              <Button size='sm'>Editar</Button>
-              <AlertDelete/>
+              <Button colorScheme="blue" size='sm'><EditIcon/></Button>
+              <AlertDelete objectId={s.id} refreshHandler = {setRefreshServer}/>
+              {/* <Button colorScheme="green" size='sm'><PlusSquareIcon/></Button> */}
             </ButtonGroup>
           </Td>
         </Tr>
@@ -38,14 +55,13 @@ function StudentsList() {
   return (
     <React.Fragment>
       <VStack w="100%" h="100%">
-          <Heading p={4} mb={6} fontWeight="semibold" size="lg">
+          <Heading p={4} mb={3} fontWeight="semibold" size="lg">
             :)
           </Heading>
           <VStack alignItems="left">
             <Heading mb={4} fontWeight="normal" size="md">List of students</Heading>
-            <TableContainer maxH="300px" overflowY="auto">
+            <TableContainer maxH="300px" minH="250px" maxW="800px"overflowY="auto">
                 <Table variant='striped' colorScheme='teal'>
-                    {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
                     <Thead>
                       <Tr>
                           <Th>name</Th>
@@ -61,7 +77,7 @@ function StudentsList() {
                     </Tbody>
                 </Table>
             </TableContainer>
-            <SubmitModal modalTitle="Add student" maxW={5}/>
+            <SubmitModal modalTitle="Add student" refreshHandler = {setRefreshServer}/>
           </VStack>
       </VStack>
     </React.Fragment>

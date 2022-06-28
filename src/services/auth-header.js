@@ -7,7 +7,8 @@ export default function authHeader(){
             Authorization: 'Bearer ' + user.jwt
             // "Access-Control-Allow-Origin": "*",
             // "Access-Control-Allow-Methods": "*",
-            // "Access-Control-Allow-Headers": "*"
+            // "Access-Control-Allow-Headers": "*",
+            // "Connection": "keep-alive"
         };
     } else {
         return {};

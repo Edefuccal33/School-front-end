@@ -30,7 +30,7 @@ function SubmitModal(props) {
           <ModalContent>
             <ModalCloseButton />
             <ModalBody pb={6}>
-              <ModalForm modalTitle={props.modalTitle}/>            
+              <ModalForm modalTitle={props.modalTitle} refreshHandler = {props.refreshHandler} onClose={onClose}/>            
             </ModalBody>
           </ModalContent>
         </Modal>

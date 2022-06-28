@@ -23,7 +23,7 @@ function TeacherLists() {
   return (
     <React.Fragment>
         <TableContainer>
-          <Heading mb={4} fontWeight="normal" size="md">List of students</Heading>
+          <Heading mb={4} fontWeight="normal" size="md">List of teachers</Heading>
             <Table variant='striped' colorScheme='teal'>
                 {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
                 <Thead>

@@ -4,14 +4,15 @@ import { Heading, VStack } from "@chakra-ui/layout";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextField from "./TextField";
-import { useToast } from '@chakra-ui/react';
+import { FormLabel, useToast, InputGroup, useDisclosure } from '@chakra-ui/react';
 import authService from '../services/auth-service';
 import studentService from '../services/student-service';
+import { Text } from '@chakra-ui/react';
 
 function ModalForm(props) {
 
-
-  const toast = useToast()
+  const toast = useToast();
+  const { onClose } = useDisclosure();
 
   const initialValues = {
     name:'',
@@ -42,8 +43,10 @@ function ModalForm(props) {
             title: `Success!`,
             description: 'Student created',
             status: 'success',
-            isClosable: true,   
+            isClosable: true, 
           })
+          props.refreshHandler(true);
+          props.onClose();
         //   setTimeout(() => window.location.replace('/signin'), 2000);
         },
         () => {
@@ -74,8 +77,10 @@ function ModalForm(props) {
             mt='50px'
             justifyContent="start"
             onSubmit={formik.handleSubmit}
+            alignItems="left"
+            onClose={onClose}
           >
-            <Heading pb={4} size="lg">{props.modalTitle}</Heading>
+            <Heading textAlign="center" pb={4} size="lg">{props.modalTitle}</Heading>
 
             <TextField 
                 name="name" 
@@ -91,13 +96,16 @@ function ModalForm(props) {
                 placeholder="Enter email"
                 value={formik.values.email}
             />
-
-            <TextField
+            <InputGroup alignItems="end">
+              {/* <Text w="75%">Enter the birth date</Text> */}
+              <FormLabel w="75%" position="relative">Enter the birth date</FormLabel>
+              <TextField
                 name="birthDate"
                 type="date"
                 placeholder="Enter birth date"
                 value={formik.values.birthDate}
-            />
+              />
+            </InputGroup>
 
             <TextField
                 name="phoneNumber"
@@ -106,7 +114,7 @@ function ModalForm(props) {
                 value={formik.values.phoneNumber}
             />
 
-            <Button type="submit" variant="outline" colorScheme="teal" disabled={!formik.isValid}>
+            <Button alignSelf="center" type="submit" variant="outline" colorScheme="teal" disabled={!formik.isValid}>
               Save
             </Button>
 
