@@ -35,6 +35,7 @@ function SubmitModal(props) {
                 initialValues = {props.initialValues}
                 validationSchema = {props.validationSchema}
                 onSubmit = {props.onSubmit}
+                fields = {props.fields}
                 />            
             </ModalBody>
           </ModalContent>

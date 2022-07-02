@@ -31,6 +31,7 @@ function ModalForm(props) {
         initialValues={props.initialValues}
         validationSchema={props.validationSchema}
         onSubmit={props.onSubmit}
+        fields = {props.fields}
       >
         {formik => (
           <VStack
@@ -46,45 +47,8 @@ function ModalForm(props) {
           >
             <Heading textAlign="center" pb={4} size="lg">{props.modalTitle}</Heading>
 
-            <TextField 
-                name="name" 
-                placeholder="Enter first name" 
-                type="text" 
-                value={formik.values.name}
-                autoFocus 
-            />
-
-            <TextField
-                name="email"
-                type="email"
-                placeholder="Enter email"
-                value={formik.values.email}
-            />
-            <InputGroup alignItems="end">
-              {/* <Text w="75%">Enter the birth date</Text> */}
-              <FormLabel w="75%" position="relative">Enter the birth date</FormLabel>
-              <TextField
-                name="birthDate"
-                type="date"
-                placeholder="Enter birth date"
-                value={formik.values.birthDate}
-              />
-            </InputGroup>
-
-            {/* <CustomSelectField
-              name="subjects"
-              placeholder="Select a subject"
-              options={choices}
-              value={formik.values.subjects}
-            /> */}
-
-            <TextField
-                name="phoneNumber"
-                type="text"
-                placeholder="Enter phone number"
-                value={formik.values.phoneNumber}
-            />
-
+            {props.fields}
+          
             <Button 
               alignSelf="center" 
               type="submit"

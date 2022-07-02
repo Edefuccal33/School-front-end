@@ -1,8 +1,9 @@
-import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Tfoot, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption, IconButton, useToast, useDisclosure} from '@chakra-ui/react'
+import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Tfoot, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption, IconButton, useToast, useDisclosure, InputGroup, FormLabel} from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import studentService from '../../services/student-service';
 import SubmitModal from './../SubmitModal';
 import AlertDelete from '../AlertDelete';
+import TextField from "../TextField";
 import {
   Pagination,
   usePagination,
@@ -28,6 +29,42 @@ function StudentsList() {
       birthDate:'',
       phoneNumber:'',
     }
+
+    const studentFields = (
+      <React.Fragment>
+        <TextField 
+            name="name" 
+            placeholder="Enter first name" 
+            type="text" 
+            // value={formik.values.name}
+            autoFocus 
+        />
+
+        <TextField
+            name="email"
+            type="email"
+            placeholder="Enter email"
+            // value={formik.values.email}
+        />
+        <InputGroup alignItems="end">
+
+          <FormLabel w="75%" position="relative">Enter the birth date</FormLabel>
+          <TextField
+            name="birthDate"
+            type="date"
+            placeholder="Enter birth date"
+            // value={formik.values.birthDate}
+          />
+        </InputGroup>
+
+        <TextField
+            name="phoneNumber"
+            type="text"
+            placeholder="Enter phone number"
+            // value={formik.values.phoneNumber}
+        />
+      </React.Fragment>
+    )
 
     const validationSchema = Yup.object({
       name: Yup.string()
@@ -130,6 +167,7 @@ function StudentsList() {
               initialValues = {initialValues}
               validationSchema = {validationSchema}
               onSubmit = {onSubmit}
+              fields = {studentFields}
             />
           </VStack>
       </VStack>
