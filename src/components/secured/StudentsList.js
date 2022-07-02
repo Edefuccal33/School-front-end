@@ -1,4 +1,4 @@
-import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Tfoot, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption, IconButton} from '@chakra-ui/react'
+import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Tfoot, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption, IconButton, useToast, useDisclosure} from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import studentService from '../../services/student-service';
 import SubmitModal from './../SubmitModal';
@@ -13,12 +13,59 @@ import {
   PaginationPageGroup,
 } from "@ajna/pagination";
 import { EditIcon, SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons'
+import * as Yup from "yup";
 
 function StudentsList() {
 
     const [students, setStudents] = useState([]);
+    const toast = useToast();
 
     const [refreshServer, setRefreshServer] = useState(false);
+
+    const initialValues = {
+      name:'',
+      email:'',
+      birthDate:'',
+      phoneNumber:'',
+    }
+
+    const validationSchema = Yup.object({
+      name: Yup.string()
+        .required("Required")
+        .min(2, "Name is too short"),
+      email: Yup.string()
+        .email("Invalid email")
+        .required("Required")
+        .min(11, "Email is too short"),
+      birthDate: Yup.date()
+        .required("Required"),
+      phoneNumber: Yup.string()
+        .required("Required")
+    })
+
+    const onSubmit = async (values, {resetForm}) => {
+      
+      studentService.createStudent(values.name, values.email, values.birthDate, values.phoneNumber)
+      .then(() => {
+          toast({
+            title: `Success!`,
+            description: 'Student created',
+            status: 'success',
+            isClosable: true, 
+          })
+          setRefreshServer(true);
+        },
+        () => {
+            toast({
+              title: 'Ups!! Something went wrong',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            })
+        }
+      );
+      resetForm();
+  }
 
     useEffect(() => {
       studentService.getAll()
@@ -60,7 +107,8 @@ function StudentsList() {
           </Heading>
           <VStack alignItems="left">
             <Heading mb={4} fontWeight="normal" size="md">List of students</Heading>
-            <TableContainer maxH="300px" minH="250px" maxW="800px"overflowY="auto">
+            {/* <TableContainer maxH="300px" minH="250px" maxW="800px" overflowY="auto"> */}
+            <TableContainer>
                 <Table variant='striped' colorScheme='teal'>
                     <Thead>
                       <Tr>
@@ -77,7 +125,12 @@ function StudentsList() {
                     </Tbody>
                 </Table>
             </TableContainer>
-            <SubmitModal modalTitle="Add student" refreshHandler = {setRefreshServer}/>
+            <SubmitModal 
+              modalTitle="Add student" 
+              initialValues = {initialValues}
+              validationSchema = {validationSchema}
+              onSubmit = {onSubmit}
+            />
           </VStack>
       </VStack>
     </React.Fragment>

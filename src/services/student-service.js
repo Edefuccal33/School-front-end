@@ -11,12 +11,14 @@ class StudentService {
         });
     }
 
-    createStudent(name, email, birthDate, phoneNumber){
+    createStudent(name, email, birthDate, phoneNumber, subjects){
+        console.log(subjects)
         return axios.post(API_URL, {
             name,
             email,
             birthDate,
             phoneNumber,
+            subjects,
         }, {
             headers: authHeader()
         });

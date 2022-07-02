@@ -1,72 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@chakra-ui/button";
 import { Heading, VStack } from "@chakra-ui/layout";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import TextField from "./TextField";
-import { FormLabel, useToast, InputGroup, useDisclosure } from '@chakra-ui/react';
-import authService from '../services/auth-service';
-import studentService from '../services/student-service';
-import { Text } from '@chakra-ui/react';
+import { FormLabel, useToast, InputGroup } from '@chakra-ui/react';
+import CustomSelectField from './CustomSelectField';
+import subjectService from '../services/subject-service';
 
 function ModalForm(props) {
 
   const toast = useToast();
-  const { onClose } = useDisclosure();
 
-  const initialValues = {
-    name:'',
-    email:'',
-    birthDate:'',
-    phoneNumber:''
-  }
+  // const [subjects, setSubjects] = useState([]);
 
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .required("Required")
-      .min(2, "Name is too short"),
-    email: Yup.string()
-      .email("Invalid email")
-      .required("Required")
-      .min(11, "Email is too short"),
-    birthDate: Yup.date()
-      .required("Required"),
-    phoneNumber: Yup.string()
-      .required("Required")
-  })
-
-  const onSubmit = async (values, {resetForm}) => {
-      
-      studentService.createStudent(values.name, values.email, values.birthDate, values.phoneNumber)
-      .then(() => {
-          toast({
-            title: `Success!`,
-            description: 'Student created',
-            status: 'success',
-            isClosable: true, 
-          })
-          props.refreshHandler(true);
-          props.onClose();
-        //   setTimeout(() => window.location.replace('/signin'), 2000);
-        },
-        () => {
-            toast({
-              title: 'Ups!! Something went wrong',
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
-            })
-        }
-      );
-      resetForm();
-  }
+  // const choices = 
+  //   subjects.map((s) => (
+  //       {key: s.name, value: s.name}
+  //     )
+  //   );
+  
+  // useEffect(() => {
+  //   subjectService.getAll()
+  //     .then((response) => setSubjects(response.data))
+  //     .catch(() => subjects([]))
+  // }, []);
 
   return (
     <VStack w="100%" h="100%">
       <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        initialValues={props.initialValues}
+        validationSchema={props.validationSchema}
+        onSubmit={props.onSubmit}
       >
         {formik => (
           <VStack
@@ -78,7 +42,7 @@ function ModalForm(props) {
             justifyContent="start"
             onSubmit={formik.handleSubmit}
             alignItems="left"
-            onClose={onClose}
+            onClose={props.onClose}
           >
             <Heading textAlign="center" pb={4} size="lg">{props.modalTitle}</Heading>
 
@@ -107,6 +71,13 @@ function ModalForm(props) {
               />
             </InputGroup>
 
+            {/* <CustomSelectField
+              name="subjects"
+              placeholder="Select a subject"
+              options={choices}
+              value={formik.values.subjects}
+            /> */}
+
             <TextField
                 name="phoneNumber"
                 type="text"
@@ -114,7 +85,14 @@ function ModalForm(props) {
                 value={formik.values.phoneNumber}
             />
 
-            <Button alignSelf="center" type="submit" variant="outline" colorScheme="teal" disabled={!formik.isValid}>
+            <Button 
+              alignSelf="center" 
+              type="submit"
+              variant="outline" 
+              colorScheme="teal" 
+              disabled={!formik.isValid}
+              onClick={props.onClose} 
+            >
               Save
             </Button>
 
