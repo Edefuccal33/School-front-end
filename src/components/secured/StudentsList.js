@@ -1,4 +1,4 @@
-import { Table, Text, VStack, Badge, Flex, Box, TableContainer, Tbody, Tfoot, Th, Thead, Tr, Button, Td, Heading, ButtonGroup, Avatar, HStack, TableCaption, IconButton, useToast, useDisclosure, InputGroup, FormLabel} from '@chakra-ui/react'
+import { Table, Text, VStack, Badge, TableContainer, Tbody, Tr,Th, Thead, Button, Td, Heading, ButtonGroup, IconButton, useToast, InputGroup, FormLabel, Portal, Stack, Checkbox} from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import studentService from '../../services/student-service';
 import SubmitModal from './../SubmitModal';
@@ -15,12 +15,13 @@ import {
 } from "@ajna/pagination";
 import { EditIcon, SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import * as Yup from "yup";
+import subjectService from '../../services/subject-service';
+import SubjectsPopover from '../SubjectsPopover';
 
 function StudentsList() {
 
     const [students, setStudents] = useState([]);
     const toast = useToast();
-
     const [refreshServer, setRefreshServer] = useState(false);
 
     const initialValues = {
@@ -111,6 +112,10 @@ function StudentsList() {
         return ()=> setRefreshServer(false);
     }, [refreshServer]);
 
+    const enrollToSubject = () => {
+
+    }
+
     const rows = students.map((s, i) => (
         <Tr key={i}>
           <Td>{s.name}</Td>
@@ -124,13 +129,12 @@ function StudentsList() {
                 <IconButton ml={1} variant="ghost" size={2} icon={<SmallCloseIcon/>} />
               </Badge>
             }
-            <IconButton ml={1} variant='outline' colorScheme='teal' size={2} icon={<SmallAddIcon/>} />
+            <SubjectsPopover enrolledSubjectsId={s.subjects == "" ? "" : s.subjects[i].id}/>
           </Td>
           <Td>
             <ButtonGroup>
               <Button colorScheme="blue" size='sm'><EditIcon/></Button>
               <AlertDelete objectId={s.id} refreshHandler = {setRefreshServer}/>
-              {/* <Button colorScheme="green" size='sm'><PlusSquareIcon/></Button> */}
             </ButtonGroup>
           </Td>
         </Tr>
