@@ -8,12 +8,12 @@ import { BrowserRouter as Router } from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode> Esto invocaba algunos eventos 2 veces, como fetchs a la API....!!!
     <Router>
       <ChakraProvider theme={theme}>
         <App />
       </ChakraProvider>
     </Router>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
