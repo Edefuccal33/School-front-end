@@ -1,4 +1,4 @@
-import { Table, Text, VStack, Badge, TableContainer, Tbody, Tr,Th, Thead, Button, Td, Heading, ButtonGroup, IconButton, useToast, InputGroup, FormLabel, Portal, Stack, Checkbox} from '@chakra-ui/react'
+import { Table, Text, VStack, Badge, TableContainer, Tbody, Tr,Th, Thead, Button, Td, Heading, ButtonGroup, IconButton, useToast, InputGroup, FormLabel, Portal, Stack, Checkbox, HStack} from '@chakra-ui/react'
 import React, { useState, useEffect } from 'react'
 import studentService from '../../services/student-service';
 import SubmitModal from './../SubmitModal';
@@ -13,16 +13,26 @@ import {
   PaginationContainer,
   PaginationPageGroup,
 } from "@ajna/pagination";
+import {
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  TagRightIcon,
+  TagCloseButton,
+} from '@chakra-ui/react'
+
 import { EditIcon, SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import * as Yup from "yup";
-import subjectService from '../../services/subject-service';
 import SubjectsPopover from '../SubjectsPopover';
+import subjectService from '../../services/subject-service';
 
 function StudentsList() {
 
     const [students, setStudents] = useState([]);
+    const [subjects, setSubjects] = useState([]);
     const toast = useToast();
     const [refreshServer, setRefreshServer] = useState(false);
+    const [refreshStudents, setRefreshStudents] = useState(false);
 
     const initialValues = {
       name:'',
@@ -109,27 +119,58 @@ function StudentsList() {
       studentService.getAll()
         .then((response) => setStudents(response.data))
         .catch(() => setStudents([]))
-        return ()=> setRefreshServer(false);
+      return ()=> setRefreshServer(false);
     }, [refreshServer]);
+
+
+    // useEffect(() => {
+    //   subjectService.getAll()
+    //     .then((response) => setSubjects(response.data))
+    //     .catch(() => subjects([]))
+    //     return ()=> setRefreshStudents(false);
+    // }, [refreshStudents]);
+
+    // const fetchSubjects = async () => {
+    //   subjectService.getAll()
+    //     .then((response) => setSubjects(response.data))
+    //     .catch(() => subjects([]))
+    // }
+    
+    // useEffect(() => {fetchSubjects();     }, []);
 
     const enrollToSubject = () => {
 
     }
 
-    const rows = students.map((s, i) => (
-        <Tr key={i}>
+  function displayEnrolledSubjects(array) {
+    return (array.map((s) => (
+      <Tag
+      size="sm"
+      key={s.id}
+      borderRadius='full'
+      variant='solid'
+      colorScheme='pink'
+      >
+        <TagLabel>{s.name}</TagLabel>
+        <TagCloseButton />
+      </Tag>
+    )))
+  }
+
+    let contador = 1;
+
+    function rows2() {
+      return (students.map((s) => (
+        <Tr key={s.id}>
           <Td>{s.name}</Td>
           <Td>{s.birthDate}</Td>
           <Td>{s.email}</Td>
           <Td isNumeric>{s.phoneNumber}</Td>
           <Td>
-            {s.subjects == "" ? "Add" :
-              <Badge variant='solid' colorScheme='pink'>
-                {s.subjects[i].name} 
-                <IconButton ml={1} variant="ghost" size={2} icon={<SmallCloseIcon/>} />
-              </Badge>
-            }
-            <SubjectsPopover enrolledSubjectsId={s.subjects == "" ? "" : s.subjects[i].id}/>
+            {console.log("vuelta: " + contador++)}
+            {/* {console.log("all Subjects: " + subjects[1].name)} */}
+              {s.subjects == "" ? "Add" : <HStack>{displayEnrolledSubjects(s.subjects)}</HStack>}
+              {/* <SubjectsPopover enrolledSubjects={s.subjects == "" ? "" : s.subjects.map((s) => (s.name))} allSubjectsNames={subjects.map((s) => (s.name))}/> */}
           </Td>
           <Td>
             <ButtonGroup>
@@ -138,7 +179,28 @@ function StudentsList() {
             </ButtonGroup>
           </Td>
         </Tr>
-    ));
+      )))
+    }
+
+    // const rows = students.map((s,i) => (
+    //     <Tr key={s.id}>
+    //       <Td>{s.name}</Td>
+    //       <Td>{s.birthDate}</Td>
+    //       <Td>{s.email}</Td>
+    //       <Td isNumeric>{s.phoneNumber}</Td>
+    //       <Td>
+    //         {console.log("vuelta: " + contador++)}
+    //           {s.subjects == "" ? "Add" : <HStack>{enrolledSubjects(s.subjects)}</HStack>}
+    //           <SubjectsPopover enrolledSubjects={s.subjects == "" ? "" : s.subjects.map((s) => (s.name))} allSubjectsNames={subjects.map((s) => (s.name))}/>
+    //       </Td>
+    //       <Td>
+    //         <ButtonGroup>
+    //           <Button colorScheme="blue" size='sm'><EditIcon/></Button>
+    //           <AlertDelete objectId={s.id} refreshHandler = {setRefreshServer}/>
+    //         </ButtonGroup>
+    //       </Td>
+    //     </Tr>
+    // ));
 
   return (
     <React.Fragment>
@@ -162,7 +224,7 @@ function StudentsList() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                        {rows}
+                        {rows2()}
                     </Tbody>
                 </Table>
             </TableContainer>
